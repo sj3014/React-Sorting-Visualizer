@@ -1,9 +1,9 @@
 export function getMergeSortAnimations(arr) {
   const animations = [];
   if (arr.length <= 1) return arr;
-  const auxarr = arr.slice();
+  const auxArr = arr.slice();
 
-  mergeSortHelper(arr, 0, arr.length - 1, auxarr, animations);
+  mergeSortHelper(arr, 0, arr.length - 1, auxArr, animations);
 
   return animations;
 }
@@ -56,5 +56,37 @@ function doMerge(mainArr, startIdx, middleIdx, endIdx, auxArr, animations) {
     // value at index i in the auxiliary array.
     animations.push([k, auxArr[j]]);
     mainArr[k++] = auxArr[j++];
+  }
+}
+
+export function getInsertionSortAnimations(arr) {
+  const animations = [];
+  if (arr.length <= 1) return arr;
+
+  insertionSort(arr, animations);
+
+  return animations;
+}
+
+function insertionSort(arr, animations) {
+  for (let i = 1; i < arr.length; i++) {
+    let key = arr[i];
+    let comp = arr[i - 1];
+    let j = i;
+
+    while (j > 0 && comp >= key) {
+      animations.push([j, j - 1]);
+      animations.push([j, j - 1]);
+      animations.push([j, j - 1, arr[j], arr[j - 1]]);
+
+      arr[j] = comp;
+      arr[j - 1] = key;
+
+      j--;
+      if (j != 0) {
+        key = arr[j];
+        comp = arr[j - 1];
+      }
+    }
   }
 }

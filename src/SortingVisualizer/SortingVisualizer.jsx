@@ -1,5 +1,8 @@
 import React, { Component } from "react";
-import { getMergeSortAnimations } from "../sortingAlgorithms/sortingAlgorithms.js";
+import {
+  getMergeSortAnimations,
+  getInsertionSortAnimations
+} from "../sortingAlgorithms/sortingAlgorithms.js";
 import "./SortingVisualizer.css";
 
 class SortingVisualizer extends Component {
@@ -22,7 +25,38 @@ class SortingVisualizer extends Component {
     this.setState({ array });
   }
 
-  insertionSort() {}
+  insertionSort() {
+    const animations = getInsertionSortAnimations(this.state.array);
+    for (let i = 0; i < animations.length; i++) {
+      const arrayBars = document.getElementsByClassName("array-bar");
+      const isColorChange = i % 3 !== 2;
+
+      if (isColorChange) {
+        const [barKeyIdx, barCompIdx] = animations[i];
+        const barKeyStyle = arrayBars[barKeyIdx].style;
+        const barCompStyle = arrayBars[barCompIdx].style;
+        const color = i % 3 === 0 ? "red" : "turquoise";
+
+        setTimeout(() => {
+          barKeyStyle.backgroundColor = color;
+          barCompStyle.backgroundColor = color;
+        }, i * 3);
+      } else {
+        setTimeout(() => {
+          const [
+            barKeyIdx,
+            barCompIdx,
+            barKeyHeight,
+            barCompHeight
+          ] = animations[i];
+          const barKeyStyle = arrayBars[barKeyIdx].style;
+          const barCompStyle = arrayBars[barCompIdx].style;
+          barKeyStyle.height = `${barCompHeight}px`;
+          barCompStyle.height = `${barKeyHeight}px`;
+        }, i * 3);
+      }
+    }
+  }
 
   selectionSort() {}
 
