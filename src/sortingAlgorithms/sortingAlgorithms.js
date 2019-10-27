@@ -205,3 +205,55 @@ function bubbleSort(arr, animations) {
     }
   }
 }
+
+export function getHeapSortAnimations(arr) {
+  const animations = [];
+
+  if (arr.length <= 1) return arr;
+
+  heapSort(arr, animations);
+
+  return animations;
+}
+
+function heapSort(arr, animations) {
+  let n = arr.length;
+
+  for (let i = n / 2 - 1; i >= 0; i--) {
+    heapify(arr, n, i, animations);
+  }
+
+  for (let i = n - 1; i >= 0; i--) {
+    let tmp = arr[0];
+    arr[0] = arr[i];
+    arr[i] = tmp;
+
+    animations.push([0, i]);
+    animations.push([0, i]);
+    animations.push([0, i, arr[0], arr[i]]);
+
+    heapify(arr, i, 0, animations);
+  }
+}
+
+function heapify(arr, n, nodeIdx, animations) {
+  let largest = nodeIdx;
+  let left = 2 * nodeIdx + 1;
+  let right = 2 * nodeIdx + 2;
+
+  if (left < n && arr[left] > arr[largest]) largest = left;
+
+  if (right < n && arr[right] > arr[largest]) largest = right;
+
+  if (largest != nodeIdx) {
+    let tmp = arr[nodeIdx];
+    arr[nodeIdx] = arr[largest];
+    arr[largest] = tmp;
+
+    animations.push([nodeIdx, largest]);
+    animations.push([nodeIdx, largest]);
+    animations.push([nodeIdx, largest, arr[nodeIdx], arr[largest]]);
+
+    heapify(arr, n, largest, animations);
+  }
+}

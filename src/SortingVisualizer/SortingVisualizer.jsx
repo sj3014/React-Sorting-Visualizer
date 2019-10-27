@@ -4,7 +4,8 @@ import {
   getInsertionSortAnimations,
   getQuickSortAnimations,
   getSelectionSortAnimations,
-  getBubbleSortAnimations
+  getBubbleSortAnimations,
+  getHeapSortAnimations
 } from "../sortingAlgorithms/sortingAlgorithms.js";
 import "./SortingVisualizer.css";
 import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from "constants";
@@ -170,7 +171,38 @@ class SortingVisualizer extends Component {
     }
   }
 
-  heapSort() {}
+  heapSort() {
+    const animations = getHeapSortAnimations(this.state.array);
+    for (let i = 0; i < animations.length; i++) {
+      const arrayBars = document.getElementsByClassName("array-bar");
+      const isColorChange = i % 3 !== 2;
+
+      if (isColorChange) {
+        const [barLeftIdx, barRightIdx] = animations[i];
+        const barLeftStyle = arrayBars[barLeftIdx].style;
+        const barRightStyle = arrayBars[barRightIdx].style;
+        const color = i % 3 === 0 ? "red" : "turquoise";
+
+        setTimeout(() => {
+          barLeftStyle.backgroundColor = color;
+          barRightStyle.backgroundColor = color;
+        }, i * 3);
+      } else {
+        setTimeout(() => {
+          const [
+            barLeftIdx,
+            barRightIdx,
+            barLeftHeight,
+            barRightHeight
+          ] = animations[i];
+          const barLeftStyle = arrayBars[barLeftIdx].style;
+          const barRightStyle = arrayBars[barRightIdx].style;
+          barLeftStyle.height = `${barLeftHeight}px`;
+          barRightStyle.height = `${barRightHeight}px`;
+        }, i * 3);
+      }
+    }
+  }
 
   bubbleSort() {
     const animations = getBubbleSortAnimations(this.state.array);
