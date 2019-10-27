@@ -173,3 +173,35 @@ function selectionSort(arr, animations) {
     animations.push([i, minIdx, arr[i], arr[minIdx]]);
   }
 }
+
+export function getBubbleSortAnimations(arr) {
+  const animations = [];
+
+  if (arr.length <= 1) return arr;
+
+  bubbleSort(arr, animations);
+
+  return animations;
+}
+
+function bubbleSort(arr, animations) {
+  for (let i = 0; i < arr.length - 1; i++) {
+    let swapped = false;
+    for (let j = 0; j < arr.length - 1; j++) {
+      if (arr[j] >= arr[j + 1]) {
+        let tmp = arr[j];
+        arr[j] = arr[j + 1];
+        arr[j + 1] = tmp;
+
+        animations.push([j, j + 1]);
+        animations.push([j, j + 1]);
+        animations.push([j, j + 1, arr[j], arr[j + 1]]);
+
+        swapped = true;
+      }
+    }
+    if (!swapped) {
+      break;
+    }
+  }
+}
