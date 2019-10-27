@@ -83,10 +83,93 @@ function insertionSort(arr, animations) {
       arr[j - 1] = key;
 
       j--;
-      if (j != 0) {
+      if (j !== 0) {
         key = arr[j];
         comp = arr[j - 1];
       }
     }
+  }
+}
+
+export function getQuickSortAnimations(arr) {
+  const animations = [];
+
+  if (arr.length === 1) return arr;
+
+  quickSort(arr, 0, arr.length - 1, animations);
+
+  return animations;
+}
+
+function quickSort(arr, low, high, animations) {
+  if (low < high) {
+    let pi = partition(arr, low, high, animations);
+
+    quickSort(arr, low, pi - 1, animations);
+    quickSort(arr, pi + 1, high, animations);
+  }
+}
+
+function partition(arr, low, high, animations) {
+  let pivot = arr[high];
+  let i = low - 1;
+
+  for (let j = low; j < high; j++) {
+    // If current element is smaller than pivot
+    if (arr[j] < pivot) {
+      i++; // index of smaller array
+
+      let tmp = arr[i];
+      arr[i] = arr[j];
+      arr[j] = tmp;
+
+      animations.push([i, j, high]);
+      animations.push([i, j, high]);
+      animations.push([i, j, arr[i], arr[j]]);
+    }
+  }
+
+  let tmp = arr[i + 1];
+  arr[i + 1] = arr[high];
+  arr[high] = tmp;
+
+  animations.push([i + 1, high, high]);
+  animations.push([i + 1, high, high]);
+  animations.push([i + 1, high, arr[i + 1], arr[high]]);
+
+  return i + 1;
+}
+
+export function getSelectionSortAnimations(arr) {
+  const animations = [];
+
+  if (arr.length <= 1) return arr;
+
+  selectionSort(arr, animations);
+
+  return animations;
+}
+
+function selectionSort(arr, animations) {
+  for (let i = 0; i < arr.length; i++) {
+    let minIdx = i;
+
+    for (let j = i + 1; j < arr.length; j++) {
+      animations.push([minIdx, j]);
+      animations.push([minIdx, j]);
+      animations.push([minIdx, j, arr[minIdx], arr[j]]);
+
+      if (arr[minIdx] > arr[j]) {
+        minIdx = j;
+      }
+    }
+
+    let tmp = arr[minIdx];
+    arr[minIdx] = arr[i];
+    arr[i] = tmp;
+
+    animations.push([i, minIdx]);
+    animations.push([i, minIdx]);
+    animations.push([i, minIdx, arr[i], arr[minIdx]]);
   }
 }

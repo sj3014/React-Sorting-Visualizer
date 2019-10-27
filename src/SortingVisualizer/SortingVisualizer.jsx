@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import {
   getMergeSortAnimations,
-  getInsertionSortAnimations
+  getInsertionSortAnimations,
+  getQuickSortAnimations,
+  getSelectionSortAnimations
 } from "../sortingAlgorithms/sortingAlgorithms.js";
 import "./SortingVisualizer.css";
 
@@ -19,8 +21,9 @@ class SortingVisualizer extends Component {
 
   resetArray() {
     const array = [];
-    for (let i = 0; i < 300; i++) {
-      array.push(randInt(5, 800));
+    for (let i = 0; i < 180; i++) {
+      // 180
+      array.push(randInt(5, 750)); // 750
     }
     this.setState({ array });
   }
@@ -40,7 +43,7 @@ class SortingVisualizer extends Component {
         setTimeout(() => {
           barKeyStyle.backgroundColor = color;
           barCompStyle.backgroundColor = color;
-        }, i * 3);
+        }, i * 1);
       } else {
         setTimeout(() => {
           const [
@@ -53,12 +56,44 @@ class SortingVisualizer extends Component {
           const barCompStyle = arrayBars[barCompIdx].style;
           barKeyStyle.height = `${barCompHeight}px`;
           barCompStyle.height = `${barKeyHeight}px`;
-        }, i * 3);
+        }, i * 1);
       }
     }
   }
 
-  selectionSort() {}
+  selectionSort() {
+    const animations = getSelectionSortAnimations(this.state.array);
+
+    for (let i = 0; i < animations.length; i++) {
+      const arrayBars = document.getElementsByClassName("array-bar");
+      const isColorChange = i % 3 !== 2;
+
+      if (isColorChange) {
+        const [barMinIdx, barCompIdx] = animations[i];
+        const barMinStyle = arrayBars[barMinIdx].style;
+        const barCompStyle = arrayBars[barCompIdx].style;
+        const color = i % 3 === 0 ? "red" : "turquoise";
+
+        setTimeout(() => {
+          barMinStyle.backgroundColor = color;
+          barCompStyle.backgroundColor = color;
+        }, i * 3);
+      } else {
+        setTimeout(() => {
+          const [
+            barMinIdx,
+            barCompIdx,
+            barMinHeight,
+            barCompHeight
+          ] = animations[i];
+          const barMinStyle = arrayBars[barMinIdx].style;
+          const barCompStyle = arrayBars[barCompIdx].style;
+          barMinStyle.height = `${barMinHeight}px`;
+          barCompStyle.height = `${barCompHeight}px`;
+        }, i * 3);
+      }
+    }
+  }
 
   mergeSort() {
     const animations = getMergeSortAnimations(this.state.array);
@@ -86,7 +121,51 @@ class SortingVisualizer extends Component {
     }
   }
 
-  quickSort() {}
+  quickSort() {
+    const animations = getQuickSortAnimations(this.state.array);
+    let currentPivotIdx = animations[0][2];
+    for (let i = 0; i < animations.length; i++) {
+      const arrayBars = document.getElementsByClassName("array-bar");
+      const isColorChange = i % 3 !== 2;
+
+      if (isColorChange) {
+        const [barSmallIdx, barPartitionIdx, pivotIdx] = animations[i];
+        const barSmallStyle = arrayBars[barSmallIdx].style;
+        const barPartitionStyle = arrayBars[barPartitionIdx].style;
+        const barPivotStyle = arrayBars[pivotIdx].style;
+        const color = i % 3 === 0 ? "red" : "turquoise";
+
+        setTimeout(() => {
+          barSmallStyle.backgroundColor = color;
+          barPartitionStyle.backgroundColor = color;
+
+          // current pivot bar
+          barPivotStyle.backgroundColor = "black";
+          if (currentPivotIdx !== pivotIdx) {
+            arrayBars[currentPivotIdx].style.backgroundColor = "turquoise";
+            currentPivotIdx = pivotIdx;
+          }
+        }, i * 10);
+      } else {
+        setTimeout(() => {
+          const [
+            barSmallIdx,
+            barPartitionIdx,
+            barNewHeight,
+            barOldHeight
+          ] = animations[i];
+          const barSmallStyle = arrayBars[barSmallIdx].style;
+          const barPartitionStyle = arrayBars[barPartitionIdx].style;
+          barSmallStyle.height = `${barNewHeight}px`;
+          barPartitionStyle.height = `${barOldHeight}px`;
+
+          if (i + 1 === animations.length) {
+            arrayBars[currentPivotIdx].style.backgroundColor = "turquoise";
+          }
+        }, i * 10);
+      }
+    }
+  }
 
   heapSort() {}
 
