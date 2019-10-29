@@ -8,8 +8,6 @@ import {
   getHeapSortAnimations
 } from "../sortingAlgorithms/sortingAlgorithms.js";
 import "./SortingVisualizer.css";
-import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from "constants";
-import { is } from "@babel/types";
 
 class SortingVisualizer extends Component {
   constructor(props) {
